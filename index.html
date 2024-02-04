@@ -34,14 +34,16 @@
                         <button onclick="window.close()">Выход</button>
                     </div>
                     <div id="play-list" class="menu-default-list">
-                        <button>1 игрок</button>
+                        <button id="play-button-1pl">1 игрок</button>
                         <button id="play-button-2pl">2 игрока</button>
                     </div>
                     <div id="settings-list" class="menu-default-list">
-                        <p>Имя игрока 1:</p>
+                        <p>Игрок 1:</p>
                         <input id="settings-name-pl1" type="text" value="Игрок 1🤓">
-                        <p>Имя игрока 2:</p>
+                        <input id="settings-color-pl1" type="color" value="#FF0000">
+                        <p>Игрок 2:</p>
                         <input id="settings-name-pl2" type="text" value="Игрок 2🤪">
+                        <input id="settings-color-pl2" type="color" value="#0000FF">
                     </div>
                 </div>
             </div>
@@ -52,12 +54,10 @@
                 <div id="pongball"></div>
             </div>
         </div>
-        <!-- <button onclick="StartGame()">Start game</button>
-        <button onclick="StopGame()">Stop game</button>
-        <button onclick="ResetPlayerScores()">Reset Scores</button> -->
     </body>
     <script src="js/util.js"></script>
     <script src="js/keyboard.js"></script>
     <script src="js/object.js"></script>
+    <script src="js/botAI.js"></script>
     <script src="js/main.js"></script>
 </html>
