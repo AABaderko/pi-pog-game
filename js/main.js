@@ -17,9 +17,19 @@ const secondPlayer = new Character('player2', [screenGame.size.x-distFromSideScr
 // Ping-pong ball
 const pongball = new Projectile('pongball', centerPosition.copy, 1, 50);
 
+// BotAI
+const characterBot = new Bot(secondPlayer, pongball);
+
+// Game settings
+const gamePlayersScores = [];
+gamePlayersScores[-1] = 0; gamePlayersScores[1] = 0;
+
+let gamePlayMode = '1player'; //'1player' || '2player'
+
 
 // Timers
 const timerPBReset = new Timer(2 * 60); // pb - pongball
+
 
 
 // UI Interfaces
@@ -28,45 +38,60 @@ const menuButton_play_UI = document.getElementById('menu-button-play');
 const menuButton_settings_UI = document.getElementById('menu-button-settings');
 
 const menu_playList_UI = document.getElementById('play-list');
-const playButton_pl2_UI = document.getElementById('play-button-2pl');
+const playButton_1pl_UI = document.getElementById('play-button-1pl');
+const playButton_2pl_UI = document.getElementById('play-button-2pl');
 
 const menu_settingsList_UI = document.getElementById('settings-list');
 const settings_namePL1_UI = document.getElementById('settings-name-pl1');
 const settings_namePL2_UI = document.getElementById('settings-name-pl2');
+const settings_colorPL1_UI = document.getElementById('settings-color-pl1');
+const settings_colorPL2_UI = document.getElementById('settings-color-pl2');
+
+const scoreBoard_UI = document.getElementById('score-board');
+const scorePL1_UI = document.getElementById('score-pl1');
+const scorePL2_UI = document.getElementById('score-pl2');
+
+const scoreNamePL1_UI = document.getElementById('name-pl1');
+const scoreNamePL2_UI = document.getElementById('name-pl2');
 
 menuButton_play_UI.addEventListener("click", (event) => {
-    menu_playList_UI.style.display = "inherit";
-    menu_playList_UI.style.visibility = "visible";
-
-    menu_settingsList_UI.style.display = "none";
-    menu_settingsList_UI.style.visibility = "hidden";
+    showElement(menu_playList_UI, true);
+    showElement(menu_settingsList_UI, false);
 });
 menuButton_play_UI.addEventListener("focusout", (event) => {
     if (event.relatedTarget) {
         if (event.relatedTarget.offsetParent.id == "play-list") { return; }
     }
-    menu_playList_UI.style.display = "none";
-    menu_playList_UI.style.visibility = "hidden";
+    showElement(menu_playList_UI, false);
 });
 
-playButton_pl2_UI.addEventListener("click", (event) => {
+playButton_1pl_UI.addEventListener("click", (event) => {
+    gamePlayMode = '1player';
     StartGame();
-    menu_playList_UI.style.display = "none";
-    menu_playList_UI.style.visibility = "hidden";
+    showElement(menu_playList_UI, false);
+});
+
+playButton_2pl_UI.addEventListener("click", (event) => {
+    gamePlayMode = '2player';
+    StartGame();
+    showElement(menu_playList_UI, false);
 });
 
 
 menuButton_settings_UI.addEventListener("click", (event) => {
-    menu_settingsList_UI.style.display = "inherit";
-    menu_settingsList_UI.style.visibility = "visible";
-
-    menu_playList_UI.style.display = "none";
-    menu_playList_UI.style.visibility = "hidden";
+    showElement(menu_settingsList_UI, true);
+    showElement(menu_playList_UI, false);
 });
 
 menuButton_settings_UI.addEventListener("focusout", focusout_settings_list);
 settings_namePL1_UI.addEventListener("focusout", focusout_settings_list);
 settings_namePL2_UI.addEventListener("focusout", focusout_settings_list);
+
+
+function showElement(element, show) {
+    element.style.display = show ? "inherit" : "none";
+    element.style.visibility = show ? "visible" : "hidden";
+}
 
 function focusout_settings_list(event) {
     if (event.relatedTarget) {
@@ -75,20 +100,6 @@ function focusout_settings_list(event) {
     menu_settingsList_UI.style.display = "none";
     menu_settingsList_UI.style.visibility = "hidden";
 }
-
-
-
-const scoreBoard_UI = document.getElementById('score-board');
-const scorePL1_UI = document.getElementById('score-pl1');
-const scorePL2_UI = document.getElementById('score-pl2');
-
-const game_namePL1_UI = document.getElementById('name-pl1');
-const game_namePL2_UI = document.getElementById('name-pl2');
-
-
-// Game Scores
-const gamePlayersScores = [];
-gamePlayersScores[-1] = 0; gamePlayersScores[1] = 0;
 
 
 
@@ -108,11 +119,22 @@ function ResetPlayerScores() {
 function ResetGame() {
     ResetPlayerScores();
 
+    firstPlayer.color = settings_colorPL1_UI.value;
+    scoreNamePL1_UI.innerHTML = settings_namePL1_UI.value;
+
+    if (gamePlayMode == '1player') {
+        secondPlayer.color = "gray";//"#0000FF";
+        scoreNamePL2_UI.innerHTML = "Бот🤖";
+    } else if (gamePlayMode == '2player') {
+        secondPlayer.color = settings_colorPL2_UI.value;
+        scoreNamePL2_UI.innerHTML = settings_namePL2_UI.value;
+    }
+
     firstPlayer.position.y = centerPosition.y;
     secondPlayer.position.y = centerPosition.y;
 
-    game_namePL1_UI.innerHTML = settings_namePL1_UI.value;
-    game_namePL2_UI.innerHTML = settings_namePL2_UI.value;
+    screenGame.element.style['border-left-color'] = firstPlayer.team_color;
+    screenGame.element.style['border-right-color'] = secondPlayer.team_color;
 
     pongball.resetParameters();
 
@@ -133,27 +155,34 @@ function PlayerControls(keyc, obj) {
 
 function onGameTick() {
     PlayerControls(Player1KeyControls, firstPlayer);
-    PlayerControls(Player2KeyControls, secondPlayer);
+    if (gamePlayMode == '1player') {
+        characterBot.updateMovement();
+    } else if (gamePlayMode == '2player') {
+        PlayerControls(Player2KeyControls, secondPlayer);
+    }
 
     timers_list.forEach( timer => timer.update() );
     characters_list.forEach( char => {
         char.updateVelocity();
         char.updateCollision();
-        char.updateAnimation();
     });
 
     if (!pongball.isReseted) {
         pongball.updateVelocity();
         pongball.updateCollision();
-        pongball.updateAnimation();
     }
     if (pongball.isReseted) {
-        if (!timerPBReset.isActive) { UpdatePlayerScores(); }
-        timerPBReset.start();
+        if (!timerPBReset.isActive) { 
+            UpdatePlayerScores();
+            timerPBReset.start();
+        }
         if (timerPBReset.isDone) { pongball.isReseted = false; }
     }
 
-    objects_list.forEach( obj => obj.updateElementPosition() );
+    objects_list.forEach( obj => {
+        obj.updateElementPosition();
+        obj.updateAnimation();
+    });
 }
 
 

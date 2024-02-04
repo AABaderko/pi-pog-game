@@ -45,8 +45,13 @@ class Object {
         if (this.animation_list.hasOwnProperty(name)) {
             let anim = this.animation_list[name];
 
-            this.element.classList.add(anim['realname']);
+            if (anim['timer'].isActive) {
+                this.element.classList.remove(anim['realname']);
+                anim['timer'].reset();
+            }
+
             anim['timer'].start();
+            this.element.classList.add(anim['realname']);
         }
     }
 }
@@ -91,8 +96,8 @@ class Character extends Object {
         };
     }
 
-    set color(rgb_value) {
-        this.team_color = rgb_value;
+    set color(value) {
+        this.team_color = value;
         this.element.style['border-color'] = this.team_color;
     }
 
@@ -106,6 +111,7 @@ class Character extends Object {
 
     updateCollision() {
         collision_list.forEach( collider => {
+            if (collider == this) { return }
             if (collider.isReverse) {
                 if (isOutside(this, collider)) {
                     let hit = applyInsideCollision(this, collider);
@@ -150,7 +156,7 @@ class Projectile extends Object {
         this.speed_increase = speed_increase;
         this._speed = this.speed_min;
 
-        this.velocity = [0, 0];
+        this.velocity = new Vector2();
 
         this.animation_list['hit'] = {
             'timer': new Timer(0.8, true),
@@ -194,12 +200,14 @@ class Projectile extends Object {
         this.speed = this.speed_min;
 
         this.element.style['border-color'] = null;
+        this.playAnimation('hit');
     }
 
     updateCollision() {
         let new_collision_list = collision_list.concat(characters_list);
 
         new_collision_list.forEach( collider => {
+            if (collider == this) { return }
             if (collider.isReverse) {
                 if (isOutside(this, collider)) {
                     let hit = applyInsideCollision(this, collider);
@@ -237,12 +245,12 @@ class Projectile extends Object {
     }
 
     updateVelocity() {
-        this.velocity = [
-            this.direction[0] * this._speed,
-            this.direction[1] * this._speed
+        this.velocity.xy = [
+            this.direction.x * this._speed,
+            this.direction.y * this._speed
         ];
 
-        this.position[0] += this.velocity[0] * dt;
-        this.position[1] += this.velocity[1] * dt;
+        this.position.x += this.velocity.x * dt;
+        this.position.y += this.velocity.y * dt;
     }
 }
