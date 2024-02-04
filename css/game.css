@@ -1,0 +1,64 @@
+
+#split-line {
+    width: 0%;
+    height: 100%;
+    position: absolute;
+    left: calc(50% - 2px);
+
+    border-left: 5px dashed white;
+}
+
+#player1, #player2 {
+    width: 25px;
+    height: 140px;
+    position: absolute;
+
+    background-color: white;
+    border: 3px solid lightgray;
+    border-radius: 8px;
+}
+
+.player-ball-hit { animation: 0.5s ease-in-out player-ball-hit; }
+
+#player1 { border-color: red; }
+#player2 { border-color: blue; }
+
+@keyframes player-ball-hit {
+    0% {  border-color: lightgray; }
+    15%, 20% { border-color: white; }
+    100% { border-color: relative; }
+
+    5%  { transform: translateX(-2px); }
+    60% { transform: translateX( 2px); }
+    80% { transform: translateX(  0 ); }
+}
+
+#pongball {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+
+    background-color: white;
+    border-radius: 100%;
+    border: 3px solid lightgray;
+
+    transition: border-color 0.4s ease-in;
+}
+
+.pongball-hit { animation: 0.8s ease-in-out pongball-hit; }
+
+@keyframes pongball-hit {
+    0% {
+        border-width: 3px;
+        border-color: relative;
+    }
+    30%, 80% {
+        border-width: 23px;
+        width: 0px;
+        height: 0px;
+    }
+    100% { 
+        border-width: 3px;
+        border-color: relative;
+    }
+}
