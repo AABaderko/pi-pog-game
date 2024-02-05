@@ -25,6 +25,7 @@ const gamePlayersScores = [];
 gamePlayersScores[-1] = 0; gamePlayersScores[1] = 0;
 
 let gamePlayMode = '1player'; //'1player' || '2player'
+let gameDificulty = 'hard';
 
 
 // Timers

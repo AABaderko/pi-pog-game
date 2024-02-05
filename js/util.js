@@ -103,10 +103,10 @@ class Timer {
     }
 }
 
-const getTop    = (obj) => { return obj.position.y + obj.half_size.y };
-const getBottom = (obj) => { return obj.position.y - obj.half_size.y };
-const getLeft   = (obj) => { return obj.position.x - obj.half_size.x };
-const getRight  = (obj) => { return obj.position.x + obj.half_size.x };
+const getTop    = (obj) => { return obj.position.y + obj.half_collider.y };
+const getBottom = (obj) => { return obj.position.y - obj.half_collider.y };
+const getLeft   = (obj) => { return obj.position.x - obj.half_collider.x };
+const getRight  = (obj) => { return obj.position.x + obj.half_collider.x };
 
 
 function isColliding(obj, coll) {
@@ -274,4 +274,15 @@ function getElementBorder(style) {
         border_vector.y = (parseFloat(style['border-top-width']) + parseFloat(style['border-bottom-width']))
     }
     return border_vector;
+}
+
+function switchClassElement(element, className) {
+    let classList = element.classList;
+    if (!classList.contains(className)) {
+        classList.add(className);
+        return true;
+    } else {
+        classList.remove(className);
+        return false;
+    }
 }

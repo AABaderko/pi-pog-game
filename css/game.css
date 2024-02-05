@@ -45,9 +45,10 @@
     transition: border-color 0.4s ease-in;
 }
 
-.pongball-hit { animation: 0.8s ease-in-out pongball-hit; }
+#pongball.pongball-hit { }
+#pongball.pongball-switch-color { animation: 0.8s ease-in-out pongball-switch-color; }
 
-@keyframes pongball-hit {
+@keyframes pongball-switch-color {
     0% {
         border-width: 3px;
         border-color: relative;
@@ -61,4 +62,32 @@
         border-width: 3px;
         border-color: relative;
     }
+}
+
+
+#pongball.skin-coconut {
+    background-color: transparent;
+    border-radius: 0;
+    border: none;
+
+    background-image: url("../img/pong-coconut.png");
+    width: 60px;
+    height: 60px;
+    background-size: 60px 60px;
+
+    animation: 5s linear infinite pongball-skin-coconut;
+}
+
+#pongball.skin-coconut.pongball-hit {
+    animation: 1.2s linear pongball-hit-skin-coconut, 5s linear infinite pongball-skin-coconut;
+}
+
+@keyframes pongball-skin-coconut {
+    from { transform: rotate(0deg);  }
+    to   { transform: rotate(360deg);}
+}
+
+@keyframes pongball-hit-skin-coconut {
+    0%   , 80%  { background-image: url("../img/pong-coconut-angry.png"); }
+    80.1%, 100% { background-image: url("../img/pong-coconut.png"); }
 }

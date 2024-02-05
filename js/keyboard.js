@@ -28,6 +28,14 @@ let key_combinations = {
     '87737850': () => {
         gamePlayersScores[1] += 10;
         UpdatePlayerScores();
+    },
+    // 'coconut'
+    '67796779788584': () => {
+        if (switchClassElement(pongball.element, 'skin-coconut')) {
+            pongball.setSize = [60, 60];
+        } else {
+            pongball.setSize = [40, 40];
+        }
     }
 }
 

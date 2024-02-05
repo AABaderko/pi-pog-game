@@ -16,20 +16,31 @@ class Object {
             size = [parseFloat(this.style.width), parseFloat(this.style.height)];
         }
         this.size = new Vector2(size);
-        if (isBorder) {
-            this.size = this.size.add( getElementBorder(this.style) );
-        }
+        if (isBorder) { this.size = this.size.add( getElementBorder(this.style) ); }
 
         this.half_size = this.size.div(2);
+
+        this.collider = this.size.copy;
+        this.half_collider = this.collider.div(2);
 
         this.animation_list = {};
 
         objects_list.push(this);
     }
 
+    set setSize(vector) {
+        this.size = new Vector2(vector);
+        this.half_size = this.size.div(2);
+    }
+
+    set setCollider(vector) {
+        this.collider = new Vector2(vector);
+        this.half_collider = this.collider.div(2);
+    }
+
     updateElementPosition() {
         this.element.style.left = (this.position.x - this.half_size.x) +'px';
-        this.element.style.bottom =  (this.position.y - this.half_size.y) +'px';
+        this.element.style.bottom = (this.position.y - this.half_size.y) +'px';
     }
 
     updateAnimation() {
@@ -162,6 +173,10 @@ class Projectile extends Object {
             'timer': new Timer(0.8, true),
             'realname': "pongball-hit"
         };
+        this.animation_list['switch-color'] = {
+            'timer': new Timer(0.8, true),
+            'realname': "pongball-switch-color"
+        };
     }
 
     setRandomDirection(normal) {
@@ -181,6 +196,8 @@ class Projectile extends Object {
         this.position[axis] += hit[0][axis] * normal[axis];
         this.direction = reflectVector( this.direction, normal );
         this.velocity[axis] = 0;
+
+        this.playAnimation('hit');
     }
     
     isSideCollision(hit) {
@@ -200,7 +217,7 @@ class Projectile extends Object {
         this.speed = this.speed_min;
 
         this.element.style['border-color'] = null;
-        this.playAnimation('hit');
+        this.playAnimation('switch-color');
     }
 
     updateCollision() {
@@ -229,7 +246,7 @@ class Projectile extends Object {
                         this.speed = this._speed + this.speed_increase;
 
                         this.element.style['border-color'] = collider.team_color;
-                        this.playAnimation('hit');
+                        this.playAnimation('switch-color');
 
                         collider.playAnimation('hit');
                     } else {
