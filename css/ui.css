@@ -1,6 +1,6 @@
 
 #main-menu {
-    width: 100%;
+    width: 98%;
     height: 100%;
     position: absolute;
 
@@ -19,16 +19,20 @@
 }
 
 
-.menu-default-list {
+#main-menu ul {
     width: 220px;
+    padding-left: 0;
     /* height: 200px; */
     float: left;
 }
 
-.menu-default-list button {
+#main-menu ul li {
+    list-style: none;
+}
+
+#main-menu ul li button {
     width: 100%;
     height: 80px;
-    /* margin-left: 4px; */
 
     background-color: rgba(0, 0, 0, 0);
     border: none;
@@ -37,25 +41,25 @@
     font-size: 3rem;
 }
 
-.menu-default-list button:hover {
+#main-menu ul li button:hover {
     margin-left: 10px;
     border-left: 10px solid white;
 }
 
-.menu-default-list button:focus {
+#main-menu ul li button:focus {
     margin-left: 10px;
     border-left: 10px solid lightgray;
 }
 
 
 
-.menu-default-list p {
+#main-menu ul li p {
     width: 100%;
     height: 40px;
     font-size: 2rem;
 }
 
-.menu-default-list input {
+#main-menu ul li input {
     width: 100%;
     height: 40px;
     margin-bottom: 10px;
@@ -64,15 +68,39 @@
     font-size: 2rem;
 }
 
+#main-menu ul li input[type="radio"] {
+    width: 0;
+    height: 0;
+    margin: 0;
+}
 
+#main-menu ul#radio-list li {
+    width: 100%;
+    height: 80px;
+    margin: 0;
 
-#play-list {
-    margin-left: 60px;
+    display: flex;
+    align-items: center;
+
+    font-size: 3rem;
+}
+
+#main-menu ul#radio-list li label { transition: 0.15s ease-in-out; }
+
+#main-menu ul#radio-list li label:hover { color: lightgray; }
+
+#main-menu ul#radio-list li input[type="radio"]:checked ~ label { color: darkgray; }
+
+div#play-list {
     display: none;
     visibility: hidden;
 }
 
-#settings-list {
+div#play-list ul:first-child {
+    margin-left: 60px;
+}
+
+ul#settings-list {
     width: 350px;
     margin-left: 60px;
     display: none;
@@ -144,3 +172,29 @@
 .score-box.right { right: 0; }
 #score-pl2 { left: 0; }
 #name-pl2 { right: 0; }
+
+#game-over {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;   
+    visibility: hidden;
+}
+
+#game-over #player-wins {
+    left: 50%;
+    top: 50%;
+    padding: 20px 50px;
+
+    position: absolute;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+    font-size: 4rem;
+
+    background-color: black;
+    border: 6px solid white;
+    border-radius: 25px;
+    
+    z-index: 20;
+}

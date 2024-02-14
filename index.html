@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Пинг-понг</title>
+        <link rel="icon" href="test.gif" type="image/gif">
         <link rel="stylesheet" href="css/ui.css">
         <link rel="stylesheet" href="css/game.css">
         <link rel="stylesheet" href="css/main.css">
@@ -22,29 +23,54 @@
                         <span id="score-pl2"></span>
                     </div>
                 </div>
+                <div id="game-over">
+                    <div id="player-wins">Победил: Игрок1</div>
+                </div>
                 <div id="main-menu">
                     <div id="menu-title">
                         <!-- <span>Пинг-Понг</span> -->
                         <span>Pi-Pog</span>
                         <!-- <span>Ping-Pong</span> -->
                     </div>
-                    <div id="menu-list" class="menu-default-list">
-                        <button id="menu-button-play">Играть</button>
-                        <button id="menu-button-settings">Настройки</button>
-                        <button onclick="window.close()">Выход</button>
+                    <ul id="menu-list">
+                        <li><button id="menu-button-play">Играть</button></li>
+                        <li><button id="menu-button-settings">Настройки</button></li>
+                        <li><button onclick="window.open('test.html'); window.close()">Test</button></li>
+                        <li><a href="test.html">Test</a></li>
+                        <li><button onclick="window.close()">Выход</button></li>
+                    </ul>
+                    <div id="play-list">
+                        <ul id="radio-list">
+                            <li>
+                                <input id="easy-dif" type="radio" name="difficulty" value="easy" checked/>
+                                <label for="easy-dif">Легко</label>
+                            </li>
+                            <li>
+                                <input id="med-dif" type="radio" name="difficulty" value="medium"/>
+                                <label for="med-dif">Средне</label>
+                            </li>
+                            <li>
+                                <input id="hard-dif" type="radio" name="difficulty" value="hard"/>
+                                <label for="hard-dif">Сложно</label>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li><button id="play-button-1pl">1 игрок</button></li>
+                            <li><button id="play-button-2pl">2 игрока</button></li>
+                        </ul>
                     </div>
-                    <div id="play-list" class="menu-default-list">
-                        <button id="play-button-1pl">1 игрок</button>
-                        <button id="play-button-2pl">2 игрока</button>
-                    </div>
-                    <div id="settings-list" class="menu-default-list">
-                        <p>Игрок 1:</p>
-                        <input id="settings-name-pl1" type="text" value="Игрок 1🤓">
-                        <input id="settings-color-pl1" type="color" value="#FF0000">
-                        <p>Игрок 2:</p>
-                        <input id="settings-name-pl2" type="text" value="Игрок 2🤪">
-                        <input id="settings-color-pl2" type="color" value="#0000FF">
-                    </div>
+                    <ul id="settings-list">
+                        <li>
+                            <p>Игрок 1:</p>
+                            <input id="settings-name-pl1" type="text" value="Игрок 1🤓">
+                            <input id="settings-color-pl1" type="color" value="#FF0000">
+                        </li>
+                        <li>
+                            <p>Игрок 2:</p>
+                            <input id="settings-name-pl2" type="text" value="Игрок 2🤪">
+                            <input id="settings-color-pl2" type="color" value="#0000FF">
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div id="screen-game">

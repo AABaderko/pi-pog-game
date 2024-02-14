@@ -26,7 +26,35 @@ gamePlayersScores[-1] = 0; gamePlayersScores[1] = 0;
 
 let gamePlayMode = '1player'; //'1player' || '2player'
 let gameDificulty = 'hard';
+let gameRounds = 5;
 
+const gameSettings = {
+    'easy': {
+        playerSpeed: 240,
+        pongSpeedMin: 240,
+        pongSpeedMax: 700,
+        pongAngleMin: 20,
+        pongAngleMax: 60,
+        gameRound: 5
+    },
+    'medium': {
+        playerSpeed: 350,
+        pongSpeedMin: 400,
+        pongSpeedMax: 1000,
+        pongAngleMin: 20,
+        pongAngleMax: 45,
+        gameRound: 10
+    },
+    'hard': {
+        playerSpeed: 500,
+        pongSpeedMin: 600,
+        pongSpeedMax: 1400,
+        pongAngleMin: 10,
+        pongAngleMax: 30,
+        gameRound: 15
+    },
+};
+gameSettings['default'] = gameSettings['easy'];
 
 // Timers
 const timerPBReset = new Timer(2 * 60); // pb - pongball
@@ -55,15 +83,20 @@ const scorePL2_UI = document.getElementById('score-pl2');
 const scoreNamePL1_UI = document.getElementById('name-pl1');
 const scoreNamePL2_UI = document.getElementById('name-pl2');
 
+const gameOver_UI = document.getElementById('game-over');
+const gamePlayerWins_UI = document.getElementById('player-wins');
+
+showElement(menu_playList_UI, false);
+showElement(menu_settingsList_UI, false);
+
 menuButton_play_UI.addEventListener("click", (event) => {
-    showElement(menu_playList_UI, true);
-    showElement(menu_settingsList_UI, false);
-});
-menuButton_play_UI.addEventListener("focusout", (event) => {
-    if (event.relatedTarget) {
-        if (event.relatedTarget.offsetParent.id == "play-list") { return; }
+    if (menu_playList_UI.style.display == "none") {
+        showElement(menu_playList_UI, true);
+        showElement(menu_settingsList_UI, false);
+    } else {
+        showElement(menu_playList_UI, false);
+        menuButton_play_UI.blur();
     }
-    showElement(menu_playList_UI, false);
 });
 
 playButton_1pl_UI.addEventListener("click", (event) => {
@@ -80,27 +113,20 @@ playButton_2pl_UI.addEventListener("click", (event) => {
 
 
 menuButton_settings_UI.addEventListener("click", (event) => {
-    showElement(menu_settingsList_UI, true);
-    showElement(menu_playList_UI, false);
+    if (menu_settingsList_UI.style.display == "none") {
+        showElement(menu_settingsList_UI, true);
+        showElement(menu_playList_UI, false);
+    } else {
+        showElement(menu_settingsList_UI, false);
+        menuButton_settings_UI.blur();
+    }
 });
-
-menuButton_settings_UI.addEventListener("focusout", focusout_settings_list);
-settings_namePL1_UI.addEventListener("focusout", focusout_settings_list);
-settings_namePL2_UI.addEventListener("focusout", focusout_settings_list);
-
 
 function showElement(element, show) {
     element.style.display = show ? "inherit" : "none";
     element.style.visibility = show ? "visible" : "hidden";
 }
 
-function focusout_settings_list(event) {
-    if (event.relatedTarget) {
-        if (event.relatedTarget.offsetParent.id == "settings-list") { return; }
-    }
-    menu_settingsList_UI.style.display = "none";
-    menu_settingsList_UI.style.visibility = "hidden";
-}
 
 
 
@@ -175,9 +201,25 @@ function onGameTick() {
     if (pongball.isReseted) {
         if (!timerPBReset.isActive) { 
             UpdatePlayerScores();
+            if ( (gamePlayersScores[-1] == (gameRounds-1)) && 
+                 (gamePlayersScores[ 1] == (gameRounds-1)) ) {
+                gameRounds++;
+            }
             timerPBReset.start();
         }
         if (timerPBReset.isDone) { pongball.isReseted = false; }
+    }
+
+    if (Math.max(gamePlayersScores[-1], gamePlayersScores[1]) >= gameRounds) {
+        showElement(gameOver_UI, true);
+        gamePlayerWins_UI.innerText = "Победил:";
+        if (gamePlayersScores[-1] >= gamePlayersScores[1]) {
+            gamePlayerWins_UI.innerText += " "+scoreNamePL1_UI.innerHTML;
+        } else {
+            gamePlayerWins_UI.innerText += " "+scoreNamePL2_UI.innerHTML;
+        }
+        
+        clearInterval(gameInterval);
     }
 
     objects_list.forEach( obj => {
@@ -186,11 +228,29 @@ function onGameTick() {
     });
 }
 
+function setGameSettings() {
+    let g_def = gameSettings['default'];
+    let g_set = gameSettings[gameDificulty];
 
+    firstPlayer.speed = g_set.playerSpeed || g_def.playerSpeed;
+    secondPlayer.speed = g_set.playerSpeed || g_def.playerSpeed;
+
+    pongball.speed_min = g_set.pongSpeedMin || g_def.pongSpeedMin;
+    pongball.speed_max = g_set.pongSpeedMax || g_def.pongSpeedMax;
+    pongball.speed = pongball.speed_min;
+
+    pongball.angle_min = g_set.pongAngleMin || g_def.pongAngleMin;
+    pongball.angle_max = g_set.pongAngleMax || g_def.pongAngleMax;
+
+    gameRounds = g_set.gameRound || g_def.gameRound;
+}
 
 let gameInterval = null;
 
 function StartGame() {
+    gameDificulty = document.querySelector("input[name='difficulty']:checked").value || 'easy';
+
+    setGameSettings();
     ResetGame();
     gameInterval = setInterval(onGameTick, TickInterval);
 
@@ -201,6 +261,10 @@ function StartGame() {
 
 function StopGame() {
     clearInterval(gameInterval);
+
+    if (gameOver_UI.style.visibility == "visible") {
+        showElement(gameOver_UI, false);
+    }
 
     mainMenu_UI.style.visibility = "visible";
     scoreBoard_UI.style.visibility = "hidden";
