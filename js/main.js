@@ -76,6 +76,8 @@ const settings_namePL2_UI = document.getElementById('settings-name-pl2');
 const settings_colorPL1_UI = document.getElementById('settings-color-pl1');
 const settings_colorPL2_UI = document.getElementById('settings-color-pl2');
 
+const wloppy_UI = document.getElementById('wloppy');
+
 const scoreBoard_UI = document.getElementById('score-board');
 const scorePL1_UI = document.getElementById('score-pl1');
 const scorePL2_UI = document.getElementById('score-pl2');
@@ -121,6 +123,50 @@ menuButton_settings_UI.addEventListener("click", (event) => {
         menuButton_settings_UI.blur();
     }
 });
+
+let wloppyShineInterval = null;
+let wloppyShineTimer = 0;
+
+wloppy_UI.addEventListener("mousemove", (event) => {
+    let rect = wloppy_UI.getBoundingClientRect();
+    let mouse_pos = new Vector2(
+        event.clientX - rect.left,
+        event.clientY - rect.top
+    )
+    
+    if (mouse_pos.x < 60) {
+        wloppy_UI.style['background-image'] = 'url("img/wloppy-close-eye-l.svg")';
+    } else if (mouse_pos.x > 100) {
+        wloppy_UI.style['background-image'] = 'url("img/wloppy-close-eye-r.svg")';
+    } else if (mouse_pos.y > 65) {
+        if (!(wloppy_UI.style['background-image'] == 'url("img/wloppy-tongue.svg")')) {
+            wloppy_UI.style['background-image'] = 'url("img/wloppy-tongue.svg")';
+        }
+        if (!wloppyShineInterval) { wloppyShineInterval = setInterval(setWloppyShine, 1000/60) }
+    } else {
+        wloppy_UI.style['background-image'] = null;
+    }
+});
+
+function setWloppyShine() {
+    let cur_image = wloppy_UI.style['background-image'];
+    if (wloppyShineTimer >= 3600) {
+        if (cur_image == 'url("img/wloppy-tongue.svg")') {
+            console.log("Let's shine this star!")
+            wloppy_UI.style['background-image'] = 'url("img/wloppy-tongue-shine.svg")';
+        }
+    }
+    if (!(cur_image == 'url("img/wloppy-tongue.svg")' || cur_image == 'url("img/wloppy-tongue-shine.svg")')) {
+        clearInterval(wloppyShineInterval);
+        wloppyShineInterval = null;
+        wloppyShineTimer = 0;
+    }
+    wloppyShineTimer++;
+}
+
+wloppy_UI.addEventListener("mouseout", (event) => {
+    wloppy_UI.style['background-image'] = null;
+})
 
 function showElement(element, show) {
     element.style.display = show ? "inherit" : "none";

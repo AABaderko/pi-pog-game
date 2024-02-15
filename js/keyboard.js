@@ -17,19 +17,15 @@ let keyboard = new Set();
 
 let current_keycombo = '';
 let key_combinations = {
-    // 'hesoyam'
     '72698379896577': () => {ResetPlayerScores()},
-    // 'win1'
     '87737849': () => {
         gamePlayersScores[-1] += 10;
         UpdatePlayerScores();
     },
-    // 'win2'
     '87737850': () => {
         gamePlayersScores[1] += 10;
         UpdatePlayerScores();
     },
-    // 'coconut'
     '67796779788584': () => {
         if (switchClassElement(pongball.element, 'skin-coconut')) {
             pongball.setSize = [60, 60];
@@ -43,10 +39,7 @@ window.addEventListener('keydown',
     (event) => {
         if (event.repeat) { return; };
         keyboard.add(event.code);
-
-        current_keycombo += event.keyCode;
-        // console.log(event.code, event.keyCode);
-        checkKeyCombinations();
+        checkKeyCombinations(event.keyCode);
     }
 );
 
@@ -71,7 +64,8 @@ function isActionActive(keycontrol, action) {
     return isKeyPressed(keycontrol[action]);
 }
 
-function checkKeyCombinations() {
+function checkKeyCombinations(key) {
+    current_keycombo += key;
     let match = null;
     for (let keycombo in key_combinations) {
         match = keycombo.match(current_keycombo);
@@ -86,5 +80,5 @@ function checkKeyCombinations() {
             } else { match = null }
         }
     }
-    if (!match) { current_keycombo = '' }
+    if (!match) { current_keycombo = String(key) }
 }

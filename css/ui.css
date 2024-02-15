@@ -12,7 +12,7 @@
 #main-menu * { position: relative; }
 
 #menu-title {
-    margin-top: 12%;
+    margin-top: 16%;
     margin-bottom: 2%;
 
     font-size: 6.5rem;
@@ -107,6 +107,43 @@ ul#settings-list {
     visibility: hidden;
 }
 
+#wloppy-logo {
+    width: 160px;
+    height: 140px;
+
+    margin: 10px 20px;
+    padding: 10px 0;
+
+    text-decoration: none;
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+#wloppy-logo .blink { animation: 4s linear infinite wloppy-blink }
+#wloppy-logo:hover .blink { animation: none; }
+
+@keyframes wloppy-blink {
+    0%, 46.9% { background-image: url("../img/wloppy.svg"); }
+    47%, 50% { background-image: url("../img/wloppy-blink.svg"); }
+    50.1%, 100% { background-image: url("../img/wloppy.svg"); }
+}
+
+#wloppy-logo #text {
+    width: 100%;
+    font-size: 1.75rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+#wloppy {
+    width: 160px;
+    height: 100px;
+
+    background-size: 160px 100px;
+    background-image: url("../img/wloppy.svg");
+}
 
 #score-board {
     width: 100%;

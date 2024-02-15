@@ -24,6 +24,12 @@ body::after {
     content: 
         url("../img/pong-coconut.png")
         url("../img/pong-coconut-angry.png")
+        url("../img/wloppy.svg")
+        url("../img/wloppy-blink.svg")
+        url("../img/wloppy-close-eye-l.svg")
+        url("../img/wloppy-close-eye-r.svg")
+        url("../img/wloppy-tongue.svg")
+        url("../img/wloppy-tongue-shine.svg")
 }
 
 #screen {
