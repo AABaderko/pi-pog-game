@@ -139,7 +139,7 @@ wloppy_UI.addEventListener("mousemove", (event) => {
     } else if (mouse_pos.x > 100) {
         wloppy_UI.style['background-image'] = 'url("img/wloppy-close-eye-r.svg")';
     } else if (mouse_pos.y > 65) {
-        if (!(wloppy_UI.style['background-image'] == 'url("img/wloppy-tongue.svg")')) {
+        if (!(wloppy_UI.style['background-image'] == 'url("img/wloppy-tongue-shine.svg")')) {
             wloppy_UI.style['background-image'] = 'url("img/wloppy-tongue.svg")';
         }
         if (!wloppyShineInterval) { wloppyShineInterval = setInterval(setWloppyShine, 1000/60) }
